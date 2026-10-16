@@ -1,0 +1,5 @@
+@tailwind base; @tailwind components; @tailwind utilities;
+:root { color-scheme: light; }
+body { @apply bg-paper text-ink font-sans antialiased; }
+:focus-visible { outline: 2px solid #0b6b3a; outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { *{ animation: none !important; transition: none !important; } }
