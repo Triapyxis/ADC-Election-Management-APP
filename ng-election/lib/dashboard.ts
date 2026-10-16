@@ -7,7 +7,12 @@ export type Risk = { kind: "implausible_travel" | "identical_coordinates" | "man
 export function totals(rows: Coverage[]) {
   const t = rows.reduce((a, r) => { for (const k of Object.keys(r) as (keyof Coverage)[]) if (k !== "state_name") (a as any)[k] = ((a as any)[k] ?? 0) + Number(r[k]); return a; }, {} as Record<string, number>);
   const pct = (n: number) => (t.total ? (n / t.total) * 100 : 0);
-  return { ...t, pctCoordinates: pct(t.with_coordinates), pctVerified: pct(t.verified), pctReady: pct(t.geofence_ready) } as Record<string, number>;
+ return {
+  ...t,
+  pctCoordinates: pct(t.with_coordinates ?? 0),
+  pctVerified: pct(t.verified ?? 0),
+  pctReady: pct(t.geofence_ready ?? 0),
+} as Record<string, number>;
 }
 export const countByOutcome = (cs: Check[]) => cs.reduce<Record<string, number>>((a, c) => ((a[c.outcome] = (a[c.outcome] ?? 0) + 1), a), {});
 
