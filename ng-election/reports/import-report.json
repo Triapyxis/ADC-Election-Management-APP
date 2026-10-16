@@ -1,0 +1,248 @@
+{
+  "file": "/mnt/user-data/uploads/Nigeria_polling_units.csv",
+  "sha256": "02dc816349ad3d0f8aa8d66e6db3b444640f7fab9494aa65544e194056a72ef6",
+  "mode": "preview",
+  "generated_at": "2026-10-10T07:07:26.968Z",
+  "counts": {
+    "rows": 176846,
+    "valid_units": 176846,
+    "errors": 0,
+    "states": 37,
+    "lgas": 774,
+    "wards": 8809,
+    "senatorial_districts": 109,
+    "federal_constituencies": 360
+  },
+  "flagCounts": {
+    "duplicate_name_in_ward": 2595,
+    "whitespace_normalised": 17393,
+    "non_ascii": 219,
+    "short_name": 88,
+    "possible_truncation": 14
+  },
+  "byState": {
+    "10": {
+      "name": "Delta",
+      "polling_units": 5863,
+      "lgas": 25,
+      "wards": 270
+    },
+    "11": {
+      "name": "Ebonyi",
+      "polling_units": 2946,
+      "lgas": 13,
+      "wards": 171
+    },
+    "12": {
+      "name": "Edo",
+      "polling_units": 4519,
+      "lgas": 18,
+      "wards": 192
+    },
+    "13": {
+      "name": "Ekiti",
+      "polling_units": 2445,
+      "lgas": 16,
+      "wards": 177
+    },
+    "14": {
+      "name": "Enugu",
+      "polling_units": 4145,
+      "lgas": 17,
+      "wards": 260
+    },
+    "15": {
+      "name": "Gombe",
+      "polling_units": 2988,
+      "lgas": 11,
+      "wards": 114
+    },
+    "16": {
+      "name": "Imo",
+      "polling_units": 4758,
+      "lgas": 27,
+      "wards": 305
+    },
+    "17": {
+      "name": "Jigawa",
+      "polling_units": 4522,
+      "lgas": 27,
+      "wards": 287
+    },
+    "18": {
+      "name": "Kaduna",
+      "polling_units": 8012,
+      "lgas": 23,
+      "wards": 255
+    },
+    "19": {
+      "name": "Kano",
+      "polling_units": 11222,
+      "lgas": 44,
+      "wards": 484
+    },
+    "20": {
+      "name": "Katsina",
+      "polling_units": 6652,
+      "lgas": 34,
+      "wards": 361
+    },
+    "21": {
+      "name": "Kebbi",
+      "polling_units": 3743,
+      "lgas": 21,
+      "wards": 225
+    },
+    "22": {
+      "name": "Kogi",
+      "polling_units": 3508,
+      "lgas": 21,
+      "wards": 239
+    },
+    "23": {
+      "name": "Kwara",
+      "polling_units": 2887,
+      "lgas": 16,
+      "wards": 193
+    },
+    "24": {
+      "name": "Lagos",
+      "polling_units": 13325,
+      "lgas": 20,
+      "wards": 245
+    },
+    "25": {
+      "name": "Nasarawa",
+      "polling_units": 3256,
+      "lgas": 13,
+      "wards": 147
+    },
+    "26": {
+      "name": "Niger",
+      "polling_units": 4950,
+      "lgas": 25,
+      "wards": 274
+    },
+    "27": {
+      "name": "Ogun",
+      "polling_units": 5042,
+      "lgas": 20,
+      "wards": 236
+    },
+    "28": {
+      "name": "Ondo",
+      "polling_units": 3933,
+      "lgas": 18,
+      "wards": 203
+    },
+    "29": {
+      "name": "Osun",
+      "polling_units": 3763,
+      "lgas": 30,
+      "wards": 332
+    },
+    "30": {
+      "name": "Oyo",
+      "polling_units": 6390,
+      "lgas": 33,
+      "wards": 351
+    },
+    "31": {
+      "name": "Plateau",
+      "polling_units": 4989,
+      "lgas": 17,
+      "wards": 207
+    },
+    "32": {
+      "name": "Rivers",
+      "polling_units": 6866,
+      "lgas": 23,
+      "wards": 319
+    },
+    "33": {
+      "name": "Sokoto",
+      "polling_units": 3991,
+      "lgas": 23,
+      "wards": 244
+    },
+    "34": {
+      "name": "Taraba",
+      "polling_units": 3597,
+      "lgas": 16,
+      "wards": 168
+    },
+    "35": {
+      "name": "Yobe",
+      "polling_units": 2823,
+      "lgas": 17,
+      "wards": 178
+    },
+    "36": {
+      "name": "Zamfara",
+      "polling_units": 3529,
+      "lgas": 14,
+      "wards": 147
+    },
+    "37": {
+      "name": "FCT",
+      "polling_units": 2822,
+      "lgas": 6,
+      "wards": 62
+    },
+    "06": {
+      "name": "Bayelsa",
+      "polling_units": 2244,
+      "lgas": 8,
+      "wards": 105
+    },
+    "05": {
+      "name": "Bauchi",
+      "polling_units": 5423,
+      "lgas": 20,
+      "wards": 212
+    },
+    "02": {
+      "name": "Adamawa",
+      "polling_units": 4104,
+      "lgas": 21,
+      "wards": 226
+    },
+    "08": {
+      "name": "Borno",
+      "polling_units": 5071,
+      "lgas": 27,
+      "wards": 312
+    },
+    "07": {
+      "name": "Benue",
+      "polling_units": 5102,
+      "lgas": 23,
+      "wards": 276
+    },
+    "03": {
+      "name": "Akwa Ibom",
+      "polling_units": 4353,
+      "lgas": 31,
+      "wards": 329
+    },
+    "04": {
+      "name": "Anambra",
+      "polling_units": 5720,
+      "lgas": 21,
+      "wards": 326
+    },
+    "01": {
+      "name": "Abia",
+      "polling_units": 4062,
+      "lgas": 17,
+      "wards": 184
+    },
+    "09": {
+      "name": "Cross River",
+      "polling_units": 3281,
+      "lgas": 18,
+      "wards": 193
+    }
+  },
+  "errors": []
+}
