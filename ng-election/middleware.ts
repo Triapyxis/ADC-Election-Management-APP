@@ -13,4 +13,4 @@ export async function middleware(req: NextRequest) {
   if (user.user_metadata?.must_change_password === true && !req.nextUrl.pathname.startsWith("/account/password")) { const u = req.nextUrl.clone(); u.pathname = "/account/password"; u.search = ""; return NextResponse.redirect(u); }
   return res;
 }
-export const config = { matcher: ["/agent/:path*", "/admin/:path*", "/account/:path*"] };
+export const config = { matcher: ["/agent/:path*", "/admin/:path*", "/account/:path*", "/collation-agent/:path*"] };

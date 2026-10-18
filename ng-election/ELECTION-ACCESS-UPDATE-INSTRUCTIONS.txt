@@ -1,0 +1,25 @@
+ELECTION-DAY AGENT ACCESS CONTROL UPDATE
+
+What this adds
+- Admin menu: Election-Day Agent Access.
+- Separate control per election and contest type: Presidential, Governorship, Senate, House of Representatives, State House of Assembly.
+- Scheduled opening and closing timestamps, or manual Open now / Lock now overrides.
+- Missing access-control rows are locked by default.
+- Server-side database policies and submission RPC functions enforce locks; hiding the form is not the only protection.
+- Audit-log entries for each admin change.
+
+IMPORTANT BEFORE DEPLOYING
+1. Back up the GitHub repository and the live Supabase database first.
+2. Apply supabase/migrations/0024_election_agent_access_controls.sql in Supabase SQL Editor, after migrations 0001 through 0023 have been applied.
+3. Deploy the updated source code to the existing Vercel project.
+4. Sign in as Super Admin or Election Admin and open Admin -> Election-Day Agent Access.
+5. For each election and each contest type you intend agents to submit, configure a schedule or manually open access. All missing/new controls are locked by default.
+6. Test with a test agent account: a locked contest must reject a submission; a scheduled contest must open only within the saved window; it must lock at the closing time.
+
+TIME SETTINGS
+The date/time fields use the browser's local time zone. For Nigerian election operations, configure them from a device set to Nigeria time (Africa/Lagos, UTC+1), and double-check the displayed times before saving.
+
+SAFETY NOTES
+- The migration is additive and does not delete existing result data.
+- Do not apply this directly to production without a current database backup and a test run.
+- The agent screen now displays opened contests for the assigned polling unit. Presidential, Governorship, Senate and House of Representatives contests are matched to their configured geographic scopes. State Assembly is currently matched at state level because the source data model does not yet map individual State Assembly constituencies.

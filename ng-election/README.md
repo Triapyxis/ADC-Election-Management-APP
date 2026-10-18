@@ -106,8 +106,7 @@ Private bucket `result-sheets` + `submission_documents` (migration `0016`, **wri
 | **Situation Room** | **separate Windows desktop app on each laptop**, installed from `Situation-Room-Setup.exe` (source in `situation-room.zip`) | broadcast operators, on their own laptop | OBS-style preview/program console and OBS/vMix outputs |
 
 **The Situation Room is not part of the central web app.** Each laptop runs its own copy with its own state and receives ONLY display data
-from the central system through `GET /api/feed`, which needs a **station key** issued per laptop in **Admin > Situation-room stations**
-(migration `0021`; only a hash is stored; the key is shown once; a lost laptop is cut off by revoking its key). The feed contains public
+from the central system through `GET /api/feed`, which needs a **station key** issued per laptop in **Admin > Situation-room stations**. Migrations `0021`–`0023` add one-time pairing codes, secure station-key issuance, and the least-privilege `station_system_admin` role. Pairing codes expire after 10 minutes and can be used once; only a hash is stored; station keys are shown only to the pairing client and can be revoked if a laptop is lost. The feed contains public
 results, seats led, reporting progress and projections an admin has *released*; no agent, location or submission data (`lib/room-data.ts`).
 Projections are generated and released in Admin, never shown on the public tracker. The earlier `broadcast_operator` role and `/desk`,
 `/room` and `/output` routes were removed; migrations `0019`/`0020` remain valid (the enum value is simply unused).
@@ -115,3 +114,8 @@ Untested against a database/browser; the laptop app's server and renderer are te
 
 ## Update: feed cache
 `/api/feed` shares one short-lived (3 s) result per warm server instance across all laptops (`lib/feed-cache.ts`), so ten laptops cost one set of queries per few seconds. If a load fails it serves the last good result for up to 60 s with `X-Feed-Stale: 1`; otherwise 503. The data's own `syncedAt` is its true read time, so laptops label it correctly. Key checks are NOT cached, so a revoked key stops working on the next request. "Last fetched" is written at most once a minute per key. Vercel may run several instances, each with its own cache; the load is bounded but not a single global query. Not load-tested.
+
+## Situation Room video source adapter
+The desktop app reads videos through this web app's authenticated `GET /api/media-library` endpoint, so the underlying video provider does not have to be Supabase. Configure the provider's HTTPS API endpoint in the web deployment as `SITUATION_ROOM_MEDIA_SOURCE_URL`. If the provider requires a bearer token, set `SITUATION_ROOM_MEDIA_SOURCE_TOKEN` as a server-only environment variable. Never use a Supabase service-role key as the provider token in desktop settings.
+
+The provider response can be a JSON array or `{ "items": [...] }`, `{ "videos": [...] }`, or `{ "media": [...] }`. Each video should include a playback URL (`url`, `playbackUrl`, `signedUrl`, or a 1080p URL), a recording timestamp (`recordingAt` / `recording_at` or equivalent), and optional `location`, `thumbnail`, `variants`, and timestamp verification fields. Private providers should return a playback URL that the station can use, such as a time-limited signed URL. The adapter labels timestamps as verified only when the source supplies both a verified status and a verification source; otherwise it labels them unverified. If these environment variables are not set, the endpoint safely returns `503` and the desktop reports that media-source configuration is needed.

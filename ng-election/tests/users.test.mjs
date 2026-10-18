@@ -14,5 +14,5 @@ test("new user rules; password optional (generated)", () => {
   assert.deepEqual(validateNewUser({ email: "a@b.ng", password: "a-long-enough-pass", role: "super_admin" }), []);
 });
 test("temp password: length, no look-alikes, differs", () => {
-  const a = genTempPassword(), b = genTempPassword(); assert.equal(a.length, 16); assert.ok(!/[0O1lI]/.test(a + b)); assert.notEqual(a, b); assert.equal(ROLES.length, 7);
+  const a = genTempPassword(), b = genTempPassword(); assert.equal(a.length, 16); assert.ok(!/[0O1lI]/.test(a + b)); assert.notEqual(a, b); assert.equal(ROLES.length, 8); assert.deepEqual(validateRoleGrant({ role: "station_system_admin" }), []);
 });
