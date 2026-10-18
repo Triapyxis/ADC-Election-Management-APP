@@ -24,7 +24,10 @@ export async function POST(req: Request) {
   const { data: id, error } = body.supersedesId
     ? await sb.rpc("submit_correction", { p_original: body.supersedesId, p_key: body.idempotencyKey, p_device_time: body.deviceTime ?? null, p_votes: body.votes })  // new linked row; original untouched
     : await sb.rpc("submit_result", { p_contest: body.contestId, p_pu: body.pollingUnitId, p_key: body.idempotencyKey, p_device_time: body.deviceTime ?? null, p_votes: body.votes });
-  if (error || !id) return json({ error: "Not permitted: no active assignment for this polling unit." }, 403);
+  if (error || !id) {
+    if (error?.message?.includes("Agent access is closed")) return json({ error: "Agent submissions are locked for this election type. Contact the Election Admin if access should be open." }, 423);
+    return json({ error: "Not permitted: no active assignment for this polling unit, or agent access is locked." }, 403);
+  }
 
   // Location is evaluated on the server and recorded as a REVIEW FLAG. It never rejects the votes.
   const svc = serviceClient();
