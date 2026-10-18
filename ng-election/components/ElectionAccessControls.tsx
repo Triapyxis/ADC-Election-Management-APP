@@ -83,7 +83,7 @@ export function ElectionAccessControls({ elections, controls, contestTypes }: Pr
   return <div className="space-y-8">{elections.map((e) => <section key={e.id} className="space-y-4 rounded-lg border border-rule p-4">
     <header><h2 className="text-lg font-semibold">{e.name}</h2><p className="text-sm text-ink-soft">Election date: {new Date(`${e.election_date}T12:00:00`).toLocaleDateString("en-NG")}. Each contest type is controlled independently.</p></header>
     <div className="grid gap-4 lg:grid-cols-2">{contestTypes.map((t) => {
-      const k = key(election.id, contestType.value);
+      const k = key(e.id, t.value);
 const d = drafts[k];
 
 if (!d) {
