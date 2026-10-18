@@ -93,7 +93,11 @@ if (!d) {
   }));
   return;
 }
-      const open = isAgentAccessOpen(c);
+      const open = isAgentAccessOpen({
+  accessMode: d.accessMode,
+  opensAt: d.opensAt,
+  closesAt: d.closesAt,
+});
       return <article key={t.value} className="rounded-md border border-rule p-3">
         <div className="flex flex-wrap items-start justify-between gap-2"><h3 className="font-semibold">{t.label}</h3><span className={`rounded px-2 py-1 text-xs font-semibold ${open ? "bg-green/10 text-green" : "bg-status-disputed/10 text-status-disputed"}`}>{open ? "AGENT ACCESS OPEN" : "AGENT ACCESS LOCKED"}</span></div>
         <label className="mt-3 block text-sm">Access mode<select className="mt-1 w-full border border-rule bg-paper-raised px-3 py-2" value={d.accessMode} onChange={(ev) => update(k, { accessMode: ev.target.value as AgentAccessMode })}><option value="scheduled">Scheduled window (automatic open/close)</option><option value="open">Open now (manual override)</option><option value="locked">Locked now (manual override)</option></select></label>
