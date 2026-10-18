@@ -55,7 +55,7 @@ export function ElectionAccessControls({ elections, controls, contestTypes }: Pr
     };
   });
  async function save(election: Election, contestType: ContestType) {
-  const k = key(election.id, contestType.value);
+  const k = key(e.id, t.value);
   const d: Draft | undefined = drafts[k];
 
   if (d === undefined) {
