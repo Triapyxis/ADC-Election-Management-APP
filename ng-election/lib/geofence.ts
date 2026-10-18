@@ -11,6 +11,7 @@ export type GeofenceOutcome =
 export type Evidence = { lat: number | null; lon: number | null; accuracyM: number | null; locationTime: Date | null; receivedAt: Date };
 export type PollingUnitGeo = { lat: number | null; lon: number | null; geocodeStatus: string };
 export type GeofenceResult = { outcome: GeofenceOutcome; distanceM: number | null; geofenceReady: boolean };
+export type GeofenceConfig = { radiusM: number; maxAccuracyM: number; maxEvidenceAgeS: number };
 
 export function haversineM(lat1: number, lon1: number, lat2: number, lon2: number): number {
   const R = 6_371_008.8, rad = (d: number) => (d * Math.PI) / 180;
@@ -23,7 +24,7 @@ const valid = (lat: number | null, lon: number | null) =>
 
 /** Order matters: we never report "within radius" unless the PU location is verified AND the evidence is usable.
  *  Outside-radius is a review flag, never a reason to discard the submission. */
-export function evaluateGeofence(e: Evidence, pu: PollingUnitGeo, cfg = GEOFENCE): GeofenceResult {
+export function evaluateGeofence(e: Evidence, pu: PollingUnitGeo, cfg: GeofenceConfig = GEOFENCE): GeofenceResult {
   if (!valid(pu.lat, pu.lon)) return { outcome: "pu_coordinates_missing", distanceM: null, geofenceReady: false };
   if (pu.geocodeStatus !== "verified") return { outcome: "pu_coordinates_unverified", distanceM: null, geofenceReady: false };
   if (!valid(e.lat, e.lon) || e.accuracyM == null || !Number.isFinite(e.accuracyM) || e.accuracyM < 0 || !e.locationTime)

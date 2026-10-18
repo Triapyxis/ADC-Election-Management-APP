@@ -1,7 +1,7 @@
-export const ROLES = ["super_admin", "election_admin", "state_admin", "lga_coordinator", "supervisor", "verifier", "field_agent"] as const;
+export const ROLES = ["super_admin", "election_admin", "state_admin", "lga_coordinator", "supervisor", "verifier", "field_agent", "station_system_admin"] as const;
 export type Role = (typeof ROLES)[number];
-export const ROLE_LABEL: Record<Role, string> = { super_admin: "Super administrator", election_admin: "Election administrator", state_admin: "State administrator", lga_coordinator: "LGA coordinator", supervisor: "Supervisor", verifier: "Verifier", field_agent: "Field agent" };
-const NATIONAL: Role[] = ["super_admin", "election_admin"];
+export const ROLE_LABEL: Record<Role, string> = { super_admin: "Super administrator", election_admin: "Election administrator", state_admin: "State administrator", lga_coordinator: "LGA coordinator", supervisor: "Supervisor", verifier: "Verifier", field_agent: "Field agent", station_system_admin: "Station Systems Administrator" };
+const NATIONAL: Role[] = ["super_admin", "election_admin", "station_system_admin"];
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export function validateRoleGrant(i: { role?: string; stateId?: string | null; lgaId?: string | null }): string[] {
