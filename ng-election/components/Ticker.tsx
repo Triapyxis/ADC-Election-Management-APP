@@ -43,19 +43,30 @@ export function Ticker() {
 
   const link = linkState(fails, online);
   const List = ({ hidden, r }: { hidden?: boolean; r?: React.Ref<HTMLUListElement> }) => (
-    <ul ref={r} aria-hidden={hidden} className="flex shrink-0 gap-8 pr-8">
+    <ul ref={r} aria-hidden={hidden} className="flex shrink-0 items-center gap-8 pr-8">
       {items.map((i) => <li key={i.id} className="whitespace-nowrap text-sm"><span className="font-medium">{i.label}</span> <span className="text-ink-soft">{i.leader} leads, {i.votes.toLocaleString("en-NG")} votes (verified, provisional)</span></li>)}
+      {items.length === 0 && <li className="whitespace-nowrap text-sm text-ink-soft">No verified state results yet.</li>}
+      <li key="inec-sms-polling-unit" className="whitespace-nowrap text-sm">
+        <span className="mr-2 rounded bg-green/10 px-2 py-1 text-xs font-semibold text-green">VOTER INFO</span>
+        <span className="font-medium">Find your polling unit by SMS:</span>
+        <span className="text-ink-soft"> text STATE SURNAME and the last 6 digits of your VIN (e.g. STATE SURNAME 123456) to </span>
+        <a className="font-semibold underline underline-offset-2" href="sms:09062830860">09062830860</a>
+        <span className="text-ink-soft"> or </span>
+        <a className="font-semibold underline underline-offset-2" href="sms:09062830861">09062830861</a>
+        <span className="text-ink-soft">. These numbers are from older INEC guidance; confirm they are active before sending personal details. </span>
+        <a className="font-medium underline underline-offset-2" href="https://www.inecnigeria.org/wp-content/uploads/2023/02/PVCs-Collected-Registered-Voters.pdf" target="_blank" rel="noreferrer">Read INEC guidance ↗</a>
+      </li>
     </ul>);
 
   return (
-    <div className="border-b border-rule bg-paper-raised" role="region" aria-label="Latest verified state results">
+    <div className="border-b border-rule bg-paper-raised" role="region" aria-label="Election updates and voter information">
       <div className="mx-auto flex max-w-6xl items-center gap-4 px-4 py-2">
         <span className="shrink-0 text-xs text-ink-soft" aria-live="polite">
           {link === "live" ? "Live" : link === "reconnecting" ? "Reconnecting" : link === "polling" ? "Connection unstable" : "You are offline"}
           {syncedAt && link === "live" ? "" : syncedAt ? `, last synced ${new Date(syncedAt).toLocaleTimeString("en-NG")}` : ""}
         </span>
-        {items.length === 0 ? <span className="text-sm text-ink-soft">No verified state results yet.</span> : reduced
-          ? <div className="overflow-x-auto"><List /></div>
+        {reduced
+          ? <div className="min-w-0 flex-1 overflow-x-auto"><List /></div>
           : <div className="min-w-0 flex-1 overflow-hidden"><div ref={track} className="flex w-max will-change-transform"><List r={first} /><List hidden /></div></div>}
       </div>
     </div>

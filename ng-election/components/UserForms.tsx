@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { ROLES, ROLE_LABEL } from "@/lib/users";
 type Opt = { id: string; name: string };
 const c = "mt-1 w-full border border-rule bg-paper-raised px-3 py-2";
-const NATIONAL = ["super_admin", "election_admin"];
+const NATIONAL = ["super_admin", "election_admin", "station_system_admin"];
 
 function RoleFields({ states, v, set }: { states: Opt[]; v: { role: string; stateId: string; lgaId: string }; set: (x: any) => void }) {
   const [lgas, setLgas] = useState<Opt[]>([]);

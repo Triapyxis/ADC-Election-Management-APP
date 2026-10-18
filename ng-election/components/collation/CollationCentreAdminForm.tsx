@@ -1,0 +1,22 @@
+"use client";
+import { useState, type FormEvent } from "react";
+type Option = { id: string; name: string };
+export function CollationCentreAdminForm({ elections, states }: { elections: Option[]; states: Option[] }) {
+  const [message, setMessage] = useState(""), [busy, setBusy] = useState(false);
+  async function submit(e: FormEvent<HTMLFormElement>) { e.preventDefault(); const form = e.currentTarget; setBusy(true); setMessage(""); const f = new FormData(form); const body: any = Object.fromEntries(f.entries()); body.coordinatesVerified = f.get("coordinatesVerified") === "on"; body.startsAt = new Date(String(body.startsAt)).toISOString(); body.expiresAt = new Date(String(body.expiresAt)).toISOString();
+    try { const r = await fetch("/api/admin/collation-centres", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }); const result = await r.json(); if (!r.ok) throw new Error(result.error || "Could not save centre assignment."); setMessage(`Created centre ${result.centre.name}; assigned ${result.agentEmail}. ${result.note}`); form.reset(); } catch (err) { setMessage(err instanceof Error ? err.message : "Request failed."); } finally { setBusy(false); } }
+  return <form onSubmit={submit} className="space-y-4 rounded border border-rule bg-paper-raised p-4">
+    <label className="block text-sm font-medium">Centre name<input name="name" required minLength={2} maxLength={180} className="mt-1 w-full rounded border border-rule p-3" placeholder="e.g. Abuja Municipal Collation Centre" /></label>
+    <label className="block text-sm font-medium">Agent account email<input name="agentEmail" type="email" required className="mt-1 w-full rounded border border-rule p-3" placeholder="Existing registered user email" /></label>
+    <label className="block text-sm font-medium">Election<select name="electionId" required className="mt-1 w-full rounded border border-rule p-3"><option value="">Select election</option>{elections.map(x => <option key={x.id} value={x.id}>{x.name}</option>)}</select></label>
+    <label className="block text-sm font-medium">Election type<select name="contestType" required className="mt-1 w-full rounded border border-rule p-3">{[ ["presidential","Presidential"],["governorship","Governorship"],["senatorial","Senatorial"],["house_of_reps","House of Representatives"],["state_assembly","State Assembly"] ].map(([v,l]) => <option key={v} value={v}>{l}</option>)}</select></label>
+    <label className="block text-sm font-medium">State<select name="stateId" required className="mt-1 w-full rounded border border-rule p-3"><option value="">Select state</option>{states.map(x => <option key={x.id} value={x.id}>{x.name}</option>)}</select></label>
+    <label className="block text-sm font-medium">Centre address<input name="address" maxLength={300} className="mt-1 w-full rounded border border-rule p-3" /></label>
+    <div className="grid grid-cols-2 gap-3"><label className="block text-sm font-medium">Latitude<input name="latitude" type="number" step="any" min="-90" max="90" required className="mt-1 w-full rounded border border-rule p-3" /></label><label className="block text-sm font-medium">Longitude<input name="longitude" type="number" step="any" min="-180" max="180" required className="mt-1 w-full rounded border border-rule p-3" /></label></div>
+    <label className="block text-sm font-medium">Geofence radius (metres)<input name="radiusM" type="number" min="25" max="1000" step="1" defaultValue="200" required className="mt-1 w-full rounded border border-rule p-3" /></label>
+    <div className="grid grid-cols-2 gap-3"><label className="block text-sm font-medium">Assignment starts<input name="startsAt" type="datetime-local" required className="mt-1 w-full rounded border border-rule p-3" /></label><label className="block text-sm font-medium">Assignment expires<input name="expiresAt" type="datetime-local" required className="mt-1 w-full rounded border border-rule p-3" /></label></div>
+    <label className="flex items-start gap-2 text-sm"><input name="coordinatesVerified" type="checkbox" className="mt-1" /><span>I have independently verified these coordinates at the physical collation centre. Required to enable capture.</span></label>
+    <button disabled={busy || !elections.length || !states.length} className="w-full rounded bg-green px-4 py-3 font-semibold text-white disabled:opacity-50">{busy ? "Saving…" : "Create centre and assign agent"}</button>
+    {message && <p role="status" className="rounded bg-paper p-3 text-sm">{message}</p>}
+  </form>;
+}
