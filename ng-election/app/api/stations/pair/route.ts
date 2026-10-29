@@ -5,9 +5,7 @@ const json = (b: unknown, s = 200) => NextResponse.json(b, { status: s, headers:
 // Best-effort per-warm-instance throttle; use platform/WAF rate limiting too for multi-instance deployments.
 const attempts = new Map<string, { count: number; reset: number }>();
 export async function POST(req: Request) {
-  const ip = (
-  req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown"
-);
+  const ip = (req.headers.get("x-forwarded-for") || "unknown").split(",")[0].trim();
   const now = Date.now(), prev = attempts.get(ip);
   if (prev && prev.reset > now && prev.count >= 12) return json({ error: "Too many pairing attempts. Wait a minute and try again." }, 429);
   attempts.set(ip, !prev || prev.reset <= now ? { count: 1, reset: now + 60_000 } : { count: prev.count + 1, reset: prev.reset });
