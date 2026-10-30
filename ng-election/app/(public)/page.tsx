@@ -14,7 +14,6 @@ import {
   leadingByState,
   type Mode,
 } from "@/lib/map-modes";
-import { ElectionCountdown } from "@/components/ElectionCountdown";
 import { VoterServices } from "@/components/VoterServices";
 export const dynamic = "force-dynamic";
 
