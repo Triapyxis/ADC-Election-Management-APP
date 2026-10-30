@@ -78,12 +78,15 @@ export function ElectionAccessControls({ elections, controls, contestTypes }: Pr
   return <div className="space-y-8">{elections.map((e) => <section key={e.id} className="space-y-4 rounded-lg border border-rule p-4">
     <header><h2 className="text-lg font-semibold">{e.name}</h2><p className="text-sm text-ink-soft">Election date: {new Date(`${e.election_date}T12:00:00`).toLocaleDateString("en-NG")}. Each contest type is controlled independently.</p></header>
     <div className="grid gap-4 lg:grid-cols-2">{contestTypes.map((t) => {
-      const k = key(e.id, t.value), const d = drafts[k] ?? {
+     const k = key(e.id, t.value);
+const d = drafts[k] ?? {
   accessMode: "scheduled" as AgentAccessMode,
   opensAt: "",
   closesAt: "",
   reason: "",
-};, c = saved[k];
+};
+const c = controls.find((item) => item.election_id === e.id && item.contest_type === t.value);
+const open = isAccessOpen(c);
       const open = isAgentAccessOpen(c);
       return <article key={t.value} className="rounded-md border border-rule p-3">
         <div className="flex flex-wrap items-start justify-between gap-2"><h3 className="font-semibold">{t.label}</h3><span className={`rounded px-2 py-1 text-xs font-semibold ${open ? "bg-green/10 text-green" : "bg-status-disputed/10 text-status-disputed"}`}>{open ? "AGENT ACCESS OPEN" : "AGENT ACCESS LOCKED"}</span></div>
