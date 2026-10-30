@@ -35,7 +35,20 @@ export function ElectionAccessControls({ elections, controls, contestTypes }: Pr
   });
   const [messages, setMessages] = useState<Record<string, string>>({});
   const [busy, setBusy] = useState<string | null>(null);
-  const update = (k: string, patch: Partial<Draft>) => setDrafts((old) => ({ ...old, [k]: { ...old[k], ...patch } }));
+  const update = (k: string, patch: Partial<Draft>) =>
+  setDrafts((old) => {
+    const current = old[k];
+
+    if (!current) return old;
+
+    return {
+      ...old,
+      [k]: {
+        ...current,
+        ...patch,
+      },
+    };
+  });
   async function save(election: Election, contestType: ContestType) {
     const k = key(election.id, contestType.value), d = drafts[k];
     if (d.accessMode === "scheduled" && (!d.opensAt || !d.closesAt || !Number.isFinite(new Date(d.opensAt).getTime()) || !Number.isFinite(new Date(d.closesAt).getTime()) || new Date(d.closesAt) <= new Date(d.opensAt))) {
