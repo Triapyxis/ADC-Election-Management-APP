@@ -57,7 +57,10 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ m
   }
   return (
     <div className="grid items-start gap-6 lg:grid-cols-[1fr_1.1fr]">
-      <section aria-labelledby="h">
+      <section
+  aria-labelledby="h"
+  className="rounded-2xl border border-rule bg-white p-5 shadow-card sm:p-7"
+>
         <p className="text-sm text-ink-soft">{new Date(snap.election.date).toLocaleDateString("en-NG", { dateStyle: "long" })} · {snap.election.status === "live" ? "Voting and collation under way" : snap.election.status}</p>
         <h1 id="h" className="mt-1 text-3xl font-semibold leading-tight">{snap.election.name}</h1>
         <p className="mt-1 text-ink-soft">Verified results only. Provisional until officially declared by INEC.</p>
