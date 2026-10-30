@@ -34,7 +34,18 @@ export default async function Geofence({ searchParams }: { searchParams: Promise
         <dl className="mt-3 grid grid-cols-2 gap-4 text-sm sm:grid-cols-5">
           {[["Polling units", t.total], ["With coordinates", t.with_coordinates], ["Verified locations", t.verified], ["Geofence-ready", t.geofence_ready], ["Agents on duty (est.)", onDuty(cs)]].map(([k, v]) => <div key={k as string}><dt className="text-ink-soft">{k}</dt><dd className="text-xl font-semibold tabular-nums">{n(Number(v ?? 0))}</dd></div>)}
         </dl>
-        {t.total ? <p className="mt-2 text-sm text-ink-soft">{t.pctCoordinates.toFixed(1)}% have coordinates, {t.pctVerified.toFixed(1)}% verified, {t.pctReady.toFixed(1)}% ready for geofencing. Unverified locations are never treated as ready.</p> : <p className="mt-2 text-ink-soft">No polling-unit data in your area.</p>}
+        {t.total ? (
+  <p className="mt-2 text-sm text-ink-soft">
+    {(t.pctCoordinates ?? 0).toFixed(1)}% have coordinates,{" "}
+    {(t.pctVerified ?? 0).toFixed(1)}% verified,{" "}
+    {(t.pctReady ?? 0).toFixed(1)}% ready for geofencing.
+    Unverified locations are never treated as ready.
+  </p>
+) : (
+  <p className="mt-2 text-ink-soft">
+    No polling-unit data in your area.
+  </p>
+)}
         <div className="mt-3 overflow-x-auto"><table className="w-full min-w-[40rem] text-left text-sm"><thead className="text-ink-soft"><tr><th className="py-1">State</th><th className="text-right">Units</th><th className="text-right">Coordinates</th><th className="text-right">Verified</th><th className="text-right">Ready</th><th className="text-right">Pending</th><th className="text-right">Low confidence</th><th className="text-right">Failed</th><th className="text-right">Conflicting</th></tr></thead>
           <tbody className="divide-y divide-rule tabular-nums">{rows.map((r) => <tr key={r.state_name}><td className="py-1.5 font-sans">{r.state_name}</td>{[r.total, r.with_coordinates, r.verified, r.geofence_ready, r.pending, r.low_confidence, r.failed, r.conflicting].map((v, i) => <td key={i} className="text-right">{n(Number(v))}</td>)}</tr>)}</tbody></table></div></section>
 
