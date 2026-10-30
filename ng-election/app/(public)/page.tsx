@@ -1,125 +1,96 @@
-                  ))}
-                </ol>
-              )}
+import {
+  getPresidentialSnapshot,
+  type Candidate,
+} from "@/lib/results";
+import { MapView } from "@/components/MapView";
+import { db } from "@/lib/supabase/server";
+import { presidentialContest } from "@/lib/drilldown";
+import {
+  MODES,
+  MODE_CONTEST,
+  shade,
+  leadingByState,
+  type Mode,
+} from "@/lib/map-modes";
+import { VoterServices } from "@/components/VoterServices";
 
-              {reported && b?.votes != null && (
-                <p className="mt-4 rounded-lg bg-brand-mint/50 px-4 py-3 text-sm text-brand-primary">
-                  <span className="font-semibold">{a!.name}</span> leads by{" "}
-                  <span className="font-bold tabular-nums">
-                    {n(a!.votes! - b.votes)}
-                  </span>{" "}
-                  votes. Share is of votes verified so far, not of all votes cast.
-                </p>
-              )}
+export const dynamic = "force-dynamic";
 
-              {/* REPORTING STATISTICS */}
-              <dl className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
-                <div className="rounded-xl border border-rule bg-paper p-4 transition hover:shadow-card">
-                  <dt className="text-xs font-medium leading-relaxed text-ink-soft">
-                    Polling units reporting
-                  </dt>
-                  <dd className="mt-2 text-xl font-bold tracking-tight text-brand-forest tabular-nums">
-                    {n(snap.progress.reporting)}
-                  </dd>
-                  <p className="mt-1 text-xs text-ink-faint">
-                    of {n(snap.progress.expected)} expected
-                  </p>
-                </div>
+const n = (v: number) => v.toLocaleString("en-NG");
 
-                <div className="rounded-xl border border-rule bg-paper p-4 transition hover:shadow-card">
-                  <dt className="text-xs font-medium text-ink-soft">
-                    Reporting
-                  </dt>
-                  <dd className="mt-2 text-xl font-bold tracking-tight text-brand-action tabular-nums">
-                    {pct.toFixed(1)}%
-                  </dd>
-                  <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-brand-mint">
-                    <div
-                      className="h-full rounded-full bg-brand-action"
-                      style={{
-                        width: `${Math.min(100, Math.max(0, pct))}%`,
-                      }}
-                    />
-                  </div>
-                </div>
+const initials = (s: string) =>
+  s.split(/\s+/).map((w) => w[0]).slice(0, 2).join("");
 
-                <div className="rounded-xl border border-rule bg-paper p-4 transition hover:shadow-card">
-                  <dt className="text-xs font-medium leading-relaxed text-ink-soft">
-                    Awaiting verification
-                  </dt>
-                  <dd className="mt-2 text-xl font-bold tracking-tight text-status-provisional tabular-nums">
-                    {n(snap.progress.pending)}
-                  </dd>
-                  <p className="mt-1 text-xs text-ink-faint">
-                    Pending review
-                  </p>
-                </div>
-
-                <div className="rounded-xl border border-rule bg-paper p-4 transition hover:shadow-card">
-                  <dt className="text-xs font-medium text-ink-soft">
-                    Rejected
-                  </dt>
-                  <dd className="mt-2 text-xl font-bold tracking-tight text-status-disputed tabular-nums">
-                    {n(snap.progress.rejected)}
-                  </dd>
-                  <p className="mt-1 text-xs text-ink-faint">
-                    Not accepted
-                  </p>
-                </div>
-              </dl>
-
-              <p className="mt-6 border-t border-rule pt-4 text-xs leading-relaxed text-ink-faint">
-                Synced {new Date(snap.fetchedAt).toLocaleTimeString("en-NG")}
-                {" · "}
-                {snap.latestSubmissionAt
-                  ? `latest verified result ${new Date(
-                      snap.latestSubmissionAt
-                    ).toLocaleTimeString("en-NG")}`
-                  : "no verified results yet"}
-              </p>
-            </>
-          ) : (
-            <div className="py-3">
-              <div className="mb-4 grid h-12 w-12 place-items-center rounded-xl bg-brand-mint text-xl font-bold text-brand-forest">
-                {resultsUnavailable ? "!" : "N"}
-              </div>
-
-              <h1
-                id="h"
-                className="text-2xl font-bold tracking-tight text-brand-forest"
-              >
-                {resultsUnavailable
-                  ? "Results are temporarily unavailable"
-                  : "No election is live"}
-              </h1>
-
-              <p className="mt-2 max-w-prose text-sm leading-relaxed text-ink-soft">
-                {resultsUnavailable
-                  ? "The results service did not respond. Nothing shown here has been lost. Please try again later."
-                  : "Awaiting results. When an election is published, national totals, reporting progress and verified state results will appear here."}
-              </p>
-
-              <div className="mt-6 rounded-xl border border-rule bg-paper p-5">
-                <p className="font-semibold text-brand-forest">
-                  Nigeria election information
-                </p>
-                <p className="mt-1 text-sm leading-relaxed text-ink-soft">
-                  Explore the state map, check official voter services and
-                  follow the election countdown while awaiting published results.
-                </p>
-              </div>
-            </div>
-          )}
-        </section>
-
-        {/* INTERACTIVE STATE MAP: SWITCHES WITHOUT PAGE NAVIGATION */}
-        <MapView
-          initialMode={mode}
-          fillsByMode={fillsByMode}
-          notesByMode={notesByMode}
-          legendsByMode={legendsByMode}
-        />
-      </div>
+function Face({ c }: { c: Candidate }) {
+  return c.photo ? (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={c.photo}
+      alt={c.name}
+      className="h-16 w-16 shrink-0 rounded-xl object-cover"
+    />
+  ) : (
+    <div
+      aria-hidden
+      className="grid h-16 w-16 shrink-0 place-items-center rounded-xl bg-brand-mint text-lg font-bold text-brand-forest"
+    >
+      {initials(c.name)}
     </div>
   );
 }
+
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: Promise<{ mode?: string }>;
+}) {
+  const { mode: requestedMode } = await searchParams;
+
+  const mode: Mode = (MODES as readonly string[]).includes(requestedMode ?? "")
+    ? (requestedMode as Mode)
+    : "presidential";
+
+  // Results are optional: the map and civic information must still render.
+  let snap: Awaited<ReturnType<typeof getPresidentialSnapshot>> | null = null;
+  let resultsUnavailable = false;
+
+  try {
+    snap = await getPresidentialSnapshot();
+  } catch {
+    resultsUnavailable = true;
+  }
+
+  const cs = snap?.candidates ?? [];
+  const p = snap?.progress;
+  const [a, b] = cs;
+
+  const reported = a?.votes != null;
+  const pct = p?.expected ? (p.reporting / p.expected) * 100 : 0;
+
+  // Build the presidential map from verified state leaders.
+  const presidentialFills: Record<string, string> = {};
+
+  if (snap) {
+    for (const [key, leader] of Object.entries(snap.stateLeaders)) {
+      const candidate = cs.find((item) => item.id === leader.candidateId);
+      if (candidate?.colour) presidentialFills[key] = candidate.colour;
+    }
+  }
+
+  const presidentialLegend = snap
+    ? cs.filter(
+        (candidate) =>
+          candidate.colour &&
+          Object.values(snap.stateLeaders).some(
+            (leader) => leader.candidateId === candidate.id
+          )
+      )
+    : [];
+
+  const fillsByMode: Record<string, Record<string, string>> = {
+    presidential: presidentialFills,
+  };
+
+  const notesByMode: Record<string, string> = {
+    presidential: presidentialLegend.length
+      ? "Colour shows the party currently leading in each state, not a declared winner."
