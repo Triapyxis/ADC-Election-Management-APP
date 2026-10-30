@@ -1,5 +1,80 @@
-@tailwind base; @tailwind components; @tailwind utilities;
-:root { color-scheme: light; }
-body { @apply bg-paper text-ink font-sans antialiased; }
-:focus-visible { outline: 2px solid #0b6b3a; outline-offset: 2px; }
-@media (prefers-reduced-motion: reduce) { *{ animation: none !important; transition: none !important; } }
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  --forest: #051F20;
+  --forest-deep: #0B2B26;
+  --forest-primary: #163832;
+  --action-green: #235347;
+  --sage: #8EB69B;
+  --mint: #DAF1DE;
+  --surface: #FFFFFF;
+  --canvas: #F8FBF9;
+  --border: #DCE9E2;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-paper text-ink font-sans antialiased;
+  min-height: 100vh;
+}
+
+::selection {
+  background: var(--mint);
+  color: var(--forest);
+}
+
+:focus-visible {
+  outline: 3px solid var(--sage);
+  outline-offset: 3px;
+}
+
+a,
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+input,
+select,
+textarea {
+  border-radius: 10px;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--action-green);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(35, 83, 71, 0.12);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
