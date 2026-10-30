@@ -1,0 +1,34 @@
+name: Extract INEC Geography CSV
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check compressed file
+        run: |
+          test -f Nigeria_polling_units.csv.gz
+          gzip -t Nigeria_polling_units.csv.gz
+
+      - name: Extract CSV
+        run: |
+          gzip -dc Nigeria_polling_units.csv.gz > Nigeria_polling_units.csv
+          echo "Extraction completed."
+          ls -lh Nigeria_polling_units.csv
+          wc -l Nigeria_polling_units.csv
+
+      - name: Save extracted CSV
+        uses: actions/upload-artifact@v4
+        with:
+          name: nigeria-polling-units-csv
+          path: Nigeria_polling_units.csv
+          retention-days: 7
