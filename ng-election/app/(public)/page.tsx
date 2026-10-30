@@ -92,7 +92,10 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ m
         <p className="mt-6 text-xs text-ink-faint">Synced {new Date(snap.fetchedAt).toLocaleTimeString("en-NG")} · {snap.latestSubmissionAt ? `latest verified result ${new Date(snap.latestSubmissionAt).toLocaleTimeString("en-NG")}` : "no verified results yet"}</p>
       </section>
 
-      <section aria-label="State map">
+      <section
+  aria-label="State map"
+  className="rounded-2xl border border-rule bg-white p-5 shadow-card sm:p-7"
+>
         <nav aria-label="Map view" className="mb-3 flex flex-wrap gap-x-4 gap-y-1 text-sm">{MODES.map((x) => <Link key={x} href={x === "presidential" ? "/" : `/?mode=${x}`} className={x === mode ? "font-semibold underline" : "text-green underline"}>{MODE_LABEL[x]}</Link>)}</nav>
         <NigeriaMap fills={mapFills} />
         <p className="mt-2 text-sm text-ink-soft">{modeNote}Select a state for its results.</p>
