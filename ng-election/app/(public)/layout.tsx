@@ -76,10 +76,9 @@ export default async function PublicLayout({
 
       <Ticker />
 
-      <main className="mx-auto w-full max-w-7xl px-4 py-7 sm:px-6 sm:py-10">
-        <CivicActions />
-        {children}
-      </main>
+     <main className="mx-auto w-full max-w-7xl px-4 py-7 sm:px-6 sm:py-10">
+  {children}
+</main>
 
       <footer className="mt-12 border-t border-rule bg-white">
         <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-5 text-xs text-ink-faint sm:flex-row sm:items-center sm:justify-between sm:px-6">
