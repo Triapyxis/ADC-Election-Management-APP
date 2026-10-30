@@ -1,10 +1,11 @@
+
 name: Extract INEC Geography CSV
 
 on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   extract:
@@ -13,6 +14,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: main
 
       - name: Check compressed file
         run: |
@@ -26,9 +29,16 @@ jobs:
           ls -lh Nigeria_polling_units.csv
           wc -l Nigeria_polling_units.csv
 
-      - name: Save extracted CSV
-        uses: actions/upload-artifact@v4
-        with:
-          name: nigeria-polling-units-csv
-          path: Nigeria_polling_units.csv
-          retention-days: 7
+      - name: Commit extracted CSV to GitHub
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add Nigeria_polling_units.csv
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Add extracted INEC polling unit geography CSV"
+            git push origin HEAD:main
+          fi
