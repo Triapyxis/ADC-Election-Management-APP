@@ -202,11 +202,8 @@ export default async function Home({
   return (
     <div className="space-y-8">
 
-      {/* ELECTION COUNTDOWN */}
-      <ElectionCountdown />
-
-      {/* INEC VOTER SERVICES */}
-      <VoterServices />
+    {/* ELECTION READINESS: COUNTDOWN + VOTER SERVICES */}
+<VoterServices />
 
       {/* RESULTS AND MAP */}
       <div className="grid items-start gap-6 lg:grid-cols-[1fr_1.1fr]">
