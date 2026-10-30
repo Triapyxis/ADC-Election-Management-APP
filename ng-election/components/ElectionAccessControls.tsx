@@ -49,8 +49,17 @@ export function ElectionAccessControls({ elections, controls, contestTypes }: Pr
       },
     };
   });
-  async function save(election: Election, contestType: ContestType) {
-    const k = key(election.id, contestType.value), d = drafts[k];
+ async function save(election: Election, contestType: ContestType) {
+  const k = key(election.id, contestType.value);
+  const d = drafts[k];
+
+  if (!d) {
+    setMessages((old) => ({
+      ...old,
+      [k]: "Draft settings are unavailable. Please refresh and try again.",
+    }));
+    return;
+  }
     if (d.accessMode === "scheduled" && (!d.opensAt || !d.closesAt || !Number.isFinite(new Date(d.opensAt).getTime()) || !Number.isFinite(new Date(d.closesAt).getTime()) || new Date(d.closesAt) <= new Date(d.opensAt))) {
       setMessages((old) => ({ ...old, [k]: "Choose valid opening and closing times; closing must be after opening." })); return;
     }
